@@ -1,0 +1,22 @@
+resources:
+  - mqsvc.yaml
+  - deployment.yaml
+  - mqsecret.yaml
+patchesStrategicMerge:
+  - patch.yaml
+
+vars:
+  - name: MQ_SVC_NAME
+    objref:
+      kind: Service
+      name: ibmmqsvc
+      apiVersion: v1
+    fieldref:
+      fieldpath: metadata.name  #optional - default fieldpath is metadata.name
+  - name: MQ_SVC_PORT
+    objref:
+      kind: Service
+      name: ibmmqsvc
+      apiVersion: v1
+    fieldref:
+      fieldpath: spec.ports[0].port

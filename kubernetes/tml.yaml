@@ -1,0 +1,79 @@
+apiVersion: v1
+data:
+  appuser: YXBw
+  appuserpwd: cGFzc3cwcmQ=
+kind: Secret
+metadata:
+  name: mqsecret
+type: Opaque
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ibmmqsvc
+spec:
+  ports:
+    - port: 1414
+      targetPort: 1414
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mqspringboot-service
+spec:
+  ports:
+    - port: 8080
+      protocol: TCP
+      targetPort: 8080
+  selector:
+    app: mqspringboot
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: mqspringboot
+  name: mqspringboot-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mqspringboot
+  template:
+    metadata:
+      labels:
+        app: mqspringboot
+    spec:
+      containers:
+        - env:
+            - name: MQ_CONN_STRING
+              value: ibmmqsvc(1414)
+            - name: MSG_USER
+              valueFrom:
+                secretKeyRef:
+                  key: appuser
+                  name: mqsecret
+            - name: MSG_PWD
+              valueFrom:
+                secretKeyRef:
+                  key: appuserpwd
+                  name: mqsecret
+            - name: MSG_QUEUE_MANAGER
+              value: QM1
+            - name: MSG_CHANNEL
+              value: DEV.APP.SVRCONN
+          image: hmanikkothu/mqspringboot:latest
+          name: mqspringboot
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: ibmmqsvc
+subsets:
+  - addresses:
+      - ip: 192.168.1.104
+    ports:
+      - port: 1414

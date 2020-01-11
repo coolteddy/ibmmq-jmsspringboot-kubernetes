@@ -1,0 +1,18 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: ibmmqsvc
+spec:
+  ports:
+    - port: 1414
+      targetPort: 1414
+---
+kind: Endpoints
+apiVersion: v1
+metadata:
+  name: ibmmqsvc
+subsets:
+  - addresses:
+      - ip: 192.168.1.104
+    ports:
+      - port: 1414

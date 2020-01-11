@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mqspringboot-deployment
+spec:
+  template:
+    spec:
+      containers:
+        - name: mqspringboot
+          env:
+            - name: MQ_CONN_STRING
+              value: $(MQ_SVC_NAME)($(MQ_SVC_PORT))
+            - name: MSG_USER
+              valueFrom:
+                secretKeyRef:
+                  name: mqsecret
+                  key: appuser
+            - name: MSG_PWD
+              valueFrom:
+                secretKeyRef:
+                  name: mqsecret
+                  key: appuserpwd

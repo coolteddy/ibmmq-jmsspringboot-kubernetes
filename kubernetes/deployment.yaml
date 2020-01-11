@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mqspringboot-deployment
+  labels:
+    app: mqspringboot
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: mqspringboot
+  template:
+    metadata:
+      labels:
+        app: mqspringboot
+    spec:
+      containers:
+        - name: mqspringboot
+          image: hmanikkothu/mqspringboot:latest
+          env:
+            - name: MSG_QUEUE_MANAGER
+              value: "QM1"
+            - name: MSG_CHANNEL
+              value: "DEV.APP.SVRCONN"
+#            - name: MSG_USER
+#              valueFrom:
+#                secretKeyRef:
+#                  name: mqsecret
+#                  key: appuser
+#            - name: MSG_PWD
+#              valueFrom:
+#                secretKeyRef:
+#                  name: mqsecret
+#                  key: appuserpwd
+#            - name: MQ_HOST_NAME
+#              value: "ibmmq"
+#            - name: MQ_HOST_PORT
+#              value: "1414"
+          ports:
+            - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mqspringboot-service
+spec:
+  selector:
+    app: mqspringboot
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer
