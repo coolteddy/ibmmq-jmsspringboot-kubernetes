@@ -1,6 +1,7 @@
-# ibmmq-jmsspringboot-kubernetes
-
-### package springboot
+# IBMMQ-jmsspringboot-kubernetes
+.
+<img src="/Picture1.png"  width="700">
+### package JMS springboot app
 ```
 $ ./mvnw package
 ```
