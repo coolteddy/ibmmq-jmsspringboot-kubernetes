@@ -35,7 +35,8 @@ $ kustomize build .
 
 ### deploy in to kubernetes cluster
 ```
-# ideally the 'kubectl apply -k .' should do the deployment, but for some bug in the kubectl the parsing of spec.ports[0].port fails, so use the kustomize as follows.
+# ideally the 'kubectl apply -k .' should do the deployment, but 
+# probably due to some bug in the kubectl the parsing of spec.ports[0].port fails, so use the kustomize as follows.
 
 $ kustomize build . | kubectl apply -f - 
 ```
