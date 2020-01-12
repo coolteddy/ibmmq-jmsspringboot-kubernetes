@@ -39,6 +39,8 @@ $ kustomize build .
 # probably due to some bug in the kubectl the parsing of spec.ports[0].port fails, 
 # so use the kustomize as follows.
 
+# https://github.com/kubernetes/kubectl/issues/799
+
 $ kustomize build . | kubectl apply -f - 
 ```
 
